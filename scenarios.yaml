@@ -1,0 +1,44 @@
+# Demand rates are vehicles/hour PER ENTRY EDGE (12 entry edges on the 3x3 grid).
+# Profiles are lists of [start_s, end_s, rate_veh_per_hour_per_entry].
+defaults:
+  step_length: 1.0
+  interval: 60            # seconds per aggregated sample written to CSV
+  vehicle_mix: {car: 0.90, truck: 0.07, bus: 0.03}
+
+scenarios:
+  normal:
+    description: Light/moderate steady demand, free-flowing network.
+    duration: 3600
+    profile: [[0, 3600, 250]]
+
+  peak:
+    description: Rush-hour ramp-up, plateau and ramp-down.
+    duration: 3600
+    profile: [[0, 600, 250], [600, 1200, 450], [1200, 2400, 650], [2400, 3000, 450], [3000, 3600, 250]]
+
+  congestion:
+    description: Very high demand plus a mid-run incident (one approach throttled to 1 m/s).
+    duration: 3600
+    profile: [[0, 600, 350], [600, 3000, 800], [3000, 3600, 350]]
+    incident:
+      edge: B1B0          # approach edge hit by the incident
+      start: 1200
+      duration: 900
+
+  emergency:
+    description: Moderate demand with ambulances crossing the grid (for priority-control tests).
+    duration: 3600
+    profile: [[0, 3600, 350]]
+    emergency:
+      - {depart: 600,  from_boundary: left1,   to_boundary: right1}
+      - {depart: 1500, from_boundary: bottom0, to_boundary: top2}
+      - {depart: 2400, from_boundary: top1,    to_boundary: bottom2}
+      - {depart: 3000, from_boundary: right0,  to_boundary: left2}
+
+  daily_cycle:
+    description: Compressed 24 h day (1 hour of day = 600 s). Best scenario for ML training.
+    duration: 14400
+    # hour-of-day rates, expanded by the generator into 24 segments of 600 s
+    hourly_rates: [60, 40, 30, 30, 50, 120, 300, 550, 650, 500, 350, 320,
+                   340, 330, 340, 400, 520, 640, 600, 420, 300, 200, 130, 80]
+    segment_seconds: 600

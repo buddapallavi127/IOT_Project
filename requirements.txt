@@ -1,0 +1,7 @@
+eclipse-sumo>=1.20
+traci>=1.20
+sumolib>=1.20
+pandas>=2.0
+numpy>=1.24
+pyyaml>=6.0
+paho-mqtt>=1.6   # optional: only for --mqtt-host
