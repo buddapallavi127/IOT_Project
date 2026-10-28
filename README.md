@@ -57,6 +57,43 @@ class Adaptive(BaseController):
 
 Live MQTT topics: `traffic/sim/system`, `traffic/sim/intersection/<tls_id>`, `traffic/sim/emergency`.
 
+## Backend and web dashboard (Person 4)
+Install the Python dependencies from the project root and the React dependencies:
+```bash
+pip install -r requirements.txt
+cd dashboard
+npm install
+```
+
+Start the API from the project root:
+```bash
+python -m uvicorn backend.main:app --reload
+```
+
+In another terminal, start the dashboard:
+```bash
+cd dashboard
+npm run dev
+```
+
+Open `http://127.0.0.1:5173`. Select a scenario and controller, then choose **Run simulation**
+to launch SUMO and stream state to `data/live/dashboard_state.json`. The dashboard refreshes
+live simulator and signal data every 2.5 seconds and shows emergency alerts when present.
+Its city-style map uses the SUMO network topology and TraCI vehicle positions; after a run
+ends, it labels the displayed vehicle positions as the last simulation snapshot.
+Live XGBoost congestion predictions use rolling five-minute approach readings after three
+five-minute windows have been collected. When no simulation is running, forecasts use the
+latest saved five-minute samples in `data/ml/traffic_long.csv` and are labeled as historical.
+The evaluation panel compares saved controller results from `data/comparison/kpi_comparison.csv`,
+including waiting time, travel time, throughput, and queue counts. Detector queue lengths in
+metres are displayed for the live run.
+
+The API also exposes `/api/health`, `/api/config`, `/api/live`, `/api/analytics`,
+`/api/predictions`, and simulation start/status/stop routes under `/api/simulation/`.
+FastAPI's interactive endpoint documentation is at `http://127.0.0.1:8000/docs`.
+See [PERSON4_FINAL_REPORT.md](./PERSON4_FINAL_REPORT.md) for the Person 4 deliverables,
+demonstration measurements, and evaluation caveats.
+
 ## Outputs
 Per run in `data/raw/<scenario>_seed<N>_<controller>/`: `edge_metrics.csv`, `intersection_metrics.csv`,
 `system_metrics.csv`, `run_meta.json`, and `emergency_log.csv` (emergency scenario only).

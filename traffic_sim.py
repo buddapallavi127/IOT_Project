@@ -13,7 +13,7 @@ Plug in your own signal controller (subclass BaseController below):
 
 Scenario settings live in scenarios.yaml. Column descriptions are in README.md.
 """
-import argparse, csv, glob, importlib, json, os, random, re, shutil, subprocess, sys, tempfile, time
+import argparse, csv, glob, importlib, json, os, random, re, shutil, signal, subprocess, sys, tempfile, time
 import xml.etree.ElementTree as ET
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
@@ -21,6 +21,7 @@ from concurrent.futures import ThreadPoolExecutor
 import yaml
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
+_STOP_REQUESTED = False
 NET_FILE = os.path.join(ROOT, "grid.net.xml")
 CONFIG_FILE = os.path.join(ROOT, "scenarios.yaml")
 TOPO_FILE = os.path.join(ROOT, "data", "network_info.json")
@@ -233,6 +234,9 @@ class Publisher:
     """Optional live state outputs: JSON file (for the backend) and MQTT (for dashboard / signal control)."""
     def __init__(self, live_json=None, mqtt_host=None, mqtt_port=1883, prefix="traffic/sim"):
         self.live_json, self.prefix, self.client = live_json, prefix, None
+        self._prediction_bins = {}
+        self._prediction_bucket = None
+        self._prediction_history = {}
         if live_json:
             os.makedirs(os.path.dirname(os.path.abspath(live_json)), exist_ok=True)
         if mqtt_host:
@@ -245,11 +249,48 @@ class Publisher:
             self.client.loop_start()
 
     def publish(self, state):
+        bucket = int(state["time"] // 300)
+        if self._prediction_bucket is not None and bucket != self._prediction_bucket:
+            for edge, values in self._prediction_bins.items():
+                history = self._prediction_history.setdefault(edge, [])
+                if values["count"]:
+                    history.append({
+                        "time": values["time"],
+                        "speed_ms": values["speed_ms"] / values["count"],
+                        "queue_vehicles": values["queue_vehicles"] / values["count"],
+                        "occupancy": values["occupancy"] / values["count"],
+                        "free_flow_speed": values["free_flow_speed"],
+                        "tls_id": values["tls_id"],
+                    })
+                    del history[:-3]
+            self._prediction_bins = {}
+        self._prediction_bucket = bucket
+        for edge, sample in state.get("approaches", {}).items():
+            values = self._prediction_bins.setdefault(edge, {
+                "count": 0, "time": state["time"], "speed_ms": 0.0,
+                "queue_vehicles": 0.0, "occupancy": 0.0,
+                "free_flow_speed": sample["free_flow_speed"], "tls_id": sample["tls_id"],
+            })
+            values["count"] += 1
+            values["time"] = state["time"]
+            values["speed_ms"] += sample["speed_ms"]
+            values["queue_vehicles"] += sample["queue_vehicles"]
+            values["occupancy"] += sample["occupancy"]
+        state["prediction_history"] = {
+            edge: list(self._prediction_history.get(edge, [])) for edge in state.get("approaches", {})
+        }
         if self.live_json:
             tmp = self.live_json + ".tmp"
             with open(tmp, "w") as f:
                 json.dump(state, f)
-            os.replace(tmp, self.live_json)
+            for attempt in range(25):
+                try:
+                    os.replace(tmp, self.live_json)
+                    break
+                except PermissionError:
+                    if attempt == 24:
+                        raise
+                    time.sleep(0.02)
         if self.client:
             self.client.publish(f"{self.prefix}/system", json.dumps(state["system"]))
             for tls, v in state["intersections"].items():
@@ -264,6 +305,7 @@ class Publisher:
 
 # =============================================================================== simulation run
 def run_simulation(a):
+    global _STOP_REQUESTED
     import sumolib, traci
     import traci.constants as tc
 
@@ -333,7 +375,13 @@ def run_simulation(a):
 
         t0 = time.time()
         inc = sc.get("incident")
+        _STOP_REQUESTED = False
+        signal.signal(signal.SIGINT, _request_stop)
+        if hasattr(signal, "SIGBREAK"):
+            signal.signal(signal.SIGBREAK, _request_stop)
         for step in range(1, int(dur / step_len) + 1):
+            if _STOP_REQUESTED or (a.stop_file and os.path.exists(a.stop_file)):
+                break
             traci.simulationStep()
             t = traci.simulation.getTime()
             controller.step(t, traci)
@@ -396,9 +444,17 @@ def run_simulation(a):
                 tls_changes.clear()
                 sysacc.update(dep=0, arr=0, tele=0, spd_w=0.0, spd_c=0.0, run=0.0, n=0)
             elif pub and step * step_len % a.live_every == 0:
-                pub.publish(live_state(traci, t, topo, sysacc, emg_active))
+                state = live_state(traci, t, topo, sysacc, emg_active, lane_det)
+                state["scenario"] = a.scenario
+                state["controller"] = controller.name
+                pub.publish(state)
             if traci.simulation.getMinExpectedNumber() == 0:
                 break
+        if pub:
+            final_state = live_state(traci, traci.simulation.getTime(), topo, sysacc, emg_active, lane_det)
+            final_state["scenario"] = a.scenario
+            final_state["controller"] = controller.name
+            pub.publish(final_state)
         wall = time.time() - t0
         traci.close()
         for f in files.values():
@@ -420,12 +476,33 @@ def run_simulation(a):
         shutil.rmtree(work, ignore_errors=True)
 
 
-def live_state(traci, t, topo, sysacc, emg_active):
+def _request_stop(signum, frame):
+    global _STOP_REQUESTED
+    _STOP_REQUESTED = True
+
+
+def live_state(traci, t, topo, sysacc, emg_active, lane_det):
     inter = {}
     edges = list(topo["edges"])
     tot_halt = sum(traci.edge.getLastStepHaltingNumber(e) for e in edges)
     edge_speeds = [traci.edge.getLastStepMeanSpeed(e) for e in edges if traci.edge.getLastStepVehicleNumber(e) > 0]
     avg_sys_spd = round(sum(edge_speeds) / len(edge_speeds), 1) if edge_speeds else 0.0
+    approaches = {}
+    for edge, info in topo["edges"].items():
+        if not info["approach"]:
+            continue
+        detectors = lane_det.get(edge, [])
+        approaches[edge] = {
+            "tls_id": info["to"],
+            "speed_ms": round(traci.edge.getLastStepMeanSpeed(edge), 3)
+            if traci.edge.getLastStepVehicleNumber(edge) else round(info["speed_limit"], 3),
+            "queue_vehicles": sum(traci.lanearea.getJamLengthVehicle(e2) for _, e2 in detectors),
+            "queue_length_m": max(
+                (traci.lanearea.getJamLengthMeters(e2) for _, e2 in detectors), default=0.0
+            ),
+            "occupancy": traci.edge.getLastStepOccupancy(edge),
+            "free_flow_speed": info["speed_limit"],
+        }
 
     for tls in topo["tls"]:
         app_q = {e: traci.edge.getLastStepHaltingNumber(e) for e in topo["tls"][tls]["incoming_edges"]}
@@ -442,8 +519,28 @@ def live_state(traci, t, topo, sysacc, emg_active):
         }
     emg = [{"id": v, "edge": traci.vehicle.getRoadID(v), "speed": round(traci.vehicle.getSpeed(v), 1),
             "x": round(traci.vehicle.getPosition(v)[0], 1), "y": round(traci.vehicle.getPosition(v)[1], 1)} for v in emg_active]
+    vehicle_ids = traci.vehicle.getIDList()
+    stride = max(1, (len(vehicle_ids) + 239) // 240)
+    visible_ids = set(vehicle_ids[::stride])
+    visible_ids.update(emg_active)
+    vehicles = []
+    for vehicle_id in visible_ids:
+        if vehicle_id not in vehicle_ids:
+            continue
+        x, y = traci.vehicle.getPosition(vehicle_id)
+        vehicles.append({
+            "id": vehicle_id,
+            "x": round(x, 2),
+            "y": round(y, 2),
+            "angle": round(traci.vehicle.getAngle(vehicle_id), 1),
+            "speed": round(traci.vehicle.getSpeed(vehicle_id), 2),
+            "emergency": vehicle_id in emg_active,
+        })
     return {
         "time": t,
+        "approaches": approaches,
+        "vehicles": vehicles,
+        "vehicle_count": len(vehicle_ids),
         "system": {
             "sim_time": t,
             "running": traci.vehicle.getIDCount(),
@@ -615,6 +712,7 @@ def main():
     r.add_argument("--live-every", type=int, default=5)
     r.add_argument("--mqtt-host"); r.add_argument("--mqtt-port", type=int, default=1883)
     r.add_argument("--out-dir")
+    r.add_argument("--stop-file", help="stop cleanly when this file appears")
 
     b = sub.add_parser("all", help="run scenarios x seeds, then build the ML dataset")
     b.add_argument("--scenarios", nargs="+")

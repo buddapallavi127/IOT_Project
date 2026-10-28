@@ -2,3 +2,5 @@ __pycache__/
 data/raw/
 data/ml/matrices/
 data/live/
+dashboard/node_modules/
+dashboard/dist/
