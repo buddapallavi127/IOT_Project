@@ -1,0 +1,37 @@
+scenario,seed,controller,controller_label,completed_trips,mean_travel_time_s,mean_waiting_time_s,mean_time_loss_s,avg_throughput_veh_h,avg_total_halting,avg_mean_speed_ms,avg_mean_wait_s,emergency_mean_travel_time_s,emergency_trips
+peak,1,fixed,Fixed-Time (baseline),5362,169.98,61.59,94.61,5362.0,88.22,7.053,4.89,,
+peak,1,queue_adaptive,Queue-Adaptive,282,102.04,12.91,28.9,2430.0,10.15,10.764,0.89,,
+peak,1,ml_adaptive,ML-Adaptive (Person 1 API),5380,117.42,16.65,42.04,5380.0,22.3,9.823,0.71,,
+peak,1,rl,Reinforcement Learning,5371,159.26,47.3,83.89,5371.0,67.46,7.642,2.22,,
+peak,2,fixed,Fixed-Time (baseline),5356,179.96,68.24,104.7,5356.0,98.27,6.694,5.21,,
+peak,2,queue_adaptive,Queue-Adaptive,5378,124.97,22.53,49.62,5378.0,30.52,9.35,1.01,,
+peak,2,ml_adaptive,ML-Adaptive (Person 1 API),5377,118.41,17.0,43.09,5377.0,22.72,9.723,0.78,,
+peak,2,rl,Reinforcement Learning,5372,163.39,49.43,88.07,5372.0,70.65,7.392,2.37,,
+peak,3,fixed,Fixed-Time (baseline),5347,168.79,60.88,93.41,5347.0,86.72,7.015,4.92,,
+peak,3,queue_adaptive,Queue-Adaptive,5357,122.74,21.28,47.35,5357.0,28.71,9.447,0.97,,
+peak,3,ml_adaptive,ML-Adaptive (Person 1 API),5353,116.67,16.19,41.28,5353.0,21.46,9.81,0.72,,
+peak,3,rl,Reinforcement Learning,5354,160.15,48.75,84.74,5354.0,69.16,7.589,2.39,,
+congestion,1,fixed,Fixed-Time (baseline),6881,300.68,154.11,223.72,6881.0,311.97,4.239,9.2,,
+congestion,1,queue_adaptive,Queue-Adaptive,7300,252.12,84.3,174.42,7300.0,172.51,5.211,2.61,,
+congestion,1,ml_adaptive,ML-Adaptive (Person 1 API),6918,333.31,124.21,256.76,6918.0,249.16,4.678,10.89,,
+congestion,1,rl,Reinforcement Learning,6832,298.03,130.68,220.78,6832.0,265.89,4.362,5.62,,
+congestion,2,fixed,Fixed-Time (baseline),6819,312.78,162.29,235.71,6819.0,327.14,4.129,9.48,,
+congestion,2,queue_adaptive,Queue-Adaptive,7237,277.48,100.36,199.61,7237.0,205.24,4.965,3.63,,
+congestion,2,ml_adaptive,ML-Adaptive (Person 1 API),7233,281.93,84.55,204.02,7233.0,173.02,4.976,3.94,,
+congestion,2,rl,Reinforcement Learning,6740,324.38,151.9,247.04,6740.0,301.24,4.209,8.23,,
+congestion,3,fixed,Fixed-Time (baseline),6939,304.27,155.19,227.69,6939.0,321.24,4.243,9.61,,
+congestion,3,queue_adaptive,Queue-Adaptive,7238,272.27,97.54,195.09,7238.0,201.91,5.113,3.27,,
+congestion,3,ml_adaptive,ML-Adaptive (Person 1 API),7286,288.11,83.73,210.98,7286.0,173.53,5.06,2.29,,
+congestion,3,rl,Reinforcement Learning,6936,289.75,124.76,213.15,6936.0,256.93,4.506,4.26,,
+emergency,1,fixed,Fixed-Time (baseline),4131,126.42,32.75,51.38,4131.0,36.52,8.55,3.6,133.75,4.0
+emergency,1,queue_adaptive,Queue-Adaptive,229,100.07,12.89,29.41,2748.0,12.66,10.458,0.81,,
+emergency,1,ml_adaptive,ML-Adaptive (Person 1 API),4151,104.99,12.11,30.0,4151.0,12.7,10.544,0.68,94.5,4.0
+emergency,1,rl,Reinforcement Learning,4142,115.51,21.33,40.54,4142.0,23.42,9.499,1.45,114.25,4.0
+emergency,2,fixed,Fixed-Time (baseline),4102,126.66,32.42,51.22,4102.0,36.33,8.556,3.54,98.25,4.0
+emergency,2,queue_adaptive,Queue-Adaptive,4134,106.19,12.87,30.7,4134.0,13.82,10.415,0.72,98.25,4.0
+emergency,2,ml_adaptive,ML-Adaptive (Person 1 API),4145,105.28,11.96,29.82,4145.0,12.68,10.519,0.67,91.75,4.0
+emergency,2,rl,Reinforcement Learning,4126,115.13,20.53,39.71,4126.0,22.56,9.553,1.35,93.5,4.0
+emergency,3,fixed,Fixed-Time (baseline),4084,125.67,32.39,50.87,4084.0,36.14,8.583,3.61,120.0,4.0
+emergency,3,queue_adaptive,Queue-Adaptive,4112,105.98,13.25,31.13,4112.0,14.07,10.404,0.76,117.25,4.0
+emergency,3,ml_adaptive,ML-Adaptive (Person 1 API),4122,105.14,12.5,30.28,4122.0,13.18,10.506,1.01,112.0,4.0
+emergency,3,rl,Reinforcement Learning,4113,114.92,20.76,40.03,4113.0,22.52,9.565,1.37,122.25,4.0

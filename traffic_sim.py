@@ -13,7 +13,7 @@ Plug in your own signal controller (subclass BaseController below):
 
 Scenario settings live in scenarios.yaml. Column descriptions are in README.md.
 """
-import argparse, csv, glob, importlib, json, os, random, shutil, subprocess, sys, tempfile, time
+import argparse, csv, glob, importlib, json, os, random, re, shutil, subprocess, sys, tempfile, time
 import xml.etree.ElementTree as ET
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
@@ -422,16 +422,39 @@ def run_simulation(a):
 
 def live_state(traci, t, topo, sysacc, emg_active):
     inter = {}
+    edges = list(topo["edges"])
+    tot_halt = sum(traci.edge.getLastStepHaltingNumber(e) for e in edges)
+    edge_speeds = [traci.edge.getLastStepMeanSpeed(e) for e in edges if traci.edge.getLastStepVehicleNumber(e) > 0]
+    avg_sys_spd = round(sum(edge_speeds) / len(edge_speeds), 1) if edge_speeds else 0.0
+
     for tls in topo["tls"]:
-        inter[tls] = {"phase": traci.trafficlight.getPhase(tls),
-                      "state": traci.trafficlight.getRedYellowGreenState(tls),
-                      "next_switch": round(traci.trafficlight.getNextSwitch(tls) - t, 1),
-                      "approach_queues": {e: traci.edge.getLastStepHaltingNumber(e)
-                                          for e in topo["tls"][tls]["incoming_edges"]}}
+        app_q = {e: traci.edge.getLastStepHaltingNumber(e) for e in topo["tls"][tls]["incoming_edges"]}
+        app_speeds = [traci.edge.getLastStepMeanSpeed(e) for e in topo["tls"][tls]["incoming_edges"] if traci.edge.getLastStepVehicleNumber(e) > 0]
+        mean_spd = round(sum(app_speeds) / len(app_speeds), 1) if app_speeds else round(topo["edges"][list(app_q.keys())[0]]["speed_limit"], 1)
+        inter[tls] = {
+            "phase": traci.trafficlight.getPhase(tls),
+            "state": traci.trafficlight.getRedYellowGreenState(tls),
+            "next_switch": round(traci.trafficlight.getNextSwitch(tls) - t, 1),
+            "total_queue": sum(app_q.values()),
+            "approach_queues": app_q,
+            "mean_speed": mean_spd,
+            "sim_time": t
+        }
     emg = [{"id": v, "edge": traci.vehicle.getRoadID(v), "speed": round(traci.vehicle.getSpeed(v), 1),
-            "x": traci.vehicle.getPosition(v)[0], "y": traci.vehicle.getPosition(v)[1]} for v in emg_active]
-    return {"time": t, "system": {"time": t, "running": traci.vehicle.getIDCount()},
-            "intersections": inter, "emergency": emg}
+            "x": round(traci.vehicle.getPosition(v)[0], 1), "y": round(traci.vehicle.getPosition(v)[1], 1)} for v in emg_active]
+    return {
+        "time": t,
+        "system": {
+            "sim_time": t,
+            "running": traci.vehicle.getIDCount(),
+            "departed": sysacc.get("dep", 0),
+            "arrived": sysacc.get("arr", 0),
+            "total_halting": tot_halt,
+            "mean_speed": avg_sys_spd
+        },
+        "intersections": inter,
+        "emergency": emg
+    }
 
 
 def flush(traci, t, interval, topo, acc, tls_changes, sysacc, ew, iw, sw):
@@ -498,7 +521,11 @@ def build_ml_dataset(bin_s=300, congestion_ratio=0.4, matrices=False):
         f = os.path.join(run_path, "edge_metrics.csv")
         if not os.path.exists(f):
             continue
-        scenario, seed, controller = run.rsplit("_", 2)
+        m = re.match(r"^(.*)_(seed\d+)_(.*)$", run)
+        if m:
+            scenario, seed, controller = m.groups()
+        else:
+            scenario, seed, controller = run.rsplit("_", 2)
         df = pd.read_csv(f)
         df = df[df.is_approach == 1].copy()
         df["bin"] = (np.ceil(df["time"] / bin_s) * bin_s).astype(int)

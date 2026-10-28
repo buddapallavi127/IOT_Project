@@ -1,0 +1,26 @@
+{
+  "model_type": "XGBClassifier",
+  "decision_threshold": 0.7,
+  "features": [
+    "speed_lag1",
+    "speed_lag2",
+    "speed_lag3",
+    "queue_lag1",
+    "queue_lag2",
+    "queue_lag3",
+    "occ_lag1",
+    "occ_lag2",
+    "occ_lag3",
+    "speed_roll3",
+    "queue_roll3",
+    "speed_trend",
+    "queue_trend",
+    "speed_ratio",
+    "hour",
+    "free_flow_speed"
+  ],
+  "pr_auc": 0.8077681082328119,
+  "f1_score": 0.7102721685689201,
+  "recall": 0.7127753303964758,
+  "precision": 0.7077865266841645
+}

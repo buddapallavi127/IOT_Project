@@ -1,0 +1,660 @@
+{
+  "nodes": {
+    "A0": {
+      "x": 250.0,
+      "y": 250.0,
+      "tls": true
+    },
+    "A1": {
+      "x": 250.0,
+      "y": 500.0,
+      "tls": true
+    },
+    "B0": {
+      "x": 500.0,
+      "y": 250.0,
+      "tls": true
+    },
+    "bottom0": {
+      "x": 250.0,
+      "y": 0.0,
+      "tls": false
+    },
+    "left0": {
+      "x": 0.0,
+      "y": 250.0,
+      "tls": false
+    },
+    "A2": {
+      "x": 250.0,
+      "y": 750.0,
+      "tls": true
+    },
+    "B1": {
+      "x": 500.0,
+      "y": 500.0,
+      "tls": true
+    },
+    "left1": {
+      "x": 0.0,
+      "y": 500.0,
+      "tls": false
+    },
+    "B2": {
+      "x": 500.0,
+      "y": 750.0,
+      "tls": true
+    },
+    "left2": {
+      "x": 0.0,
+      "y": 750.0,
+      "tls": false
+    },
+    "top0": {
+      "x": 250.0,
+      "y": 1000.0,
+      "tls": false
+    },
+    "C0": {
+      "x": 750.0,
+      "y": 250.0,
+      "tls": true
+    },
+    "bottom1": {
+      "x": 500.0,
+      "y": 0.0,
+      "tls": false
+    },
+    "C1": {
+      "x": 750.0,
+      "y": 500.0,
+      "tls": true
+    },
+    "C2": {
+      "x": 750.0,
+      "y": 750.0,
+      "tls": true
+    },
+    "top1": {
+      "x": 500.0,
+      "y": 1000.0,
+      "tls": false
+    },
+    "bottom2": {
+      "x": 750.0,
+      "y": 0.0,
+      "tls": false
+    },
+    "right0": {
+      "x": 1000.0,
+      "y": 250.0,
+      "tls": false
+    },
+    "right1": {
+      "x": 1000.0,
+      "y": 500.0,
+      "tls": false
+    },
+    "right2": {
+      "x": 1000.0,
+      "y": 750.0,
+      "tls": false
+    },
+    "top2": {
+      "x": 750.0,
+      "y": 1000.0,
+      "tls": false
+    }
+  },
+  "edges": {
+    "A0A1": {
+      "from": "A0",
+      "to": "A1",
+      "length": 229.2,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "A0B0": {
+      "from": "A0",
+      "to": "B0",
+      "length": 229.2,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "A0bottom0": {
+      "from": "A0",
+      "to": "bottom0",
+      "length": 239.6,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": false
+    },
+    "A0left0": {
+      "from": "A0",
+      "to": "left0",
+      "length": 239.6,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": false
+    },
+    "A1A0": {
+      "from": "A1",
+      "to": "A0",
+      "length": 229.2,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "A1A2": {
+      "from": "A1",
+      "to": "A2",
+      "length": 229.2,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "A1B1": {
+      "from": "A1",
+      "to": "B1",
+      "length": 229.2,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "A1left1": {
+      "from": "A1",
+      "to": "left1",
+      "length": 239.6,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": false
+    },
+    "A2A1": {
+      "from": "A2",
+      "to": "A1",
+      "length": 229.2,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "A2B2": {
+      "from": "A2",
+      "to": "B2",
+      "length": 229.2,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "A2left2": {
+      "from": "A2",
+      "to": "left2",
+      "length": 239.6,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": false
+    },
+    "A2top0": {
+      "from": "A2",
+      "to": "top0",
+      "length": 239.6,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": false
+    },
+    "B0A0": {
+      "from": "B0",
+      "to": "A0",
+      "length": 229.2,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "B0B1": {
+      "from": "B0",
+      "to": "B1",
+      "length": 229.2,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "B0C0": {
+      "from": "B0",
+      "to": "C0",
+      "length": 229.2,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "B0bottom1": {
+      "from": "B0",
+      "to": "bottom1",
+      "length": 239.6,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": false
+    },
+    "B1A1": {
+      "from": "B1",
+      "to": "A1",
+      "length": 229.2,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "B1B0": {
+      "from": "B1",
+      "to": "B0",
+      "length": 229.2,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "B1B2": {
+      "from": "B1",
+      "to": "B2",
+      "length": 229.2,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "B1C1": {
+      "from": "B1",
+      "to": "C1",
+      "length": 229.2,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "B2A2": {
+      "from": "B2",
+      "to": "A2",
+      "length": 229.2,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "B2B1": {
+      "from": "B2",
+      "to": "B1",
+      "length": 229.2,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "B2C2": {
+      "from": "B2",
+      "to": "C2",
+      "length": 229.2,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "B2top1": {
+      "from": "B2",
+      "to": "top1",
+      "length": 239.6,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": false
+    },
+    "C0B0": {
+      "from": "C0",
+      "to": "B0",
+      "length": 229.2,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "C0C1": {
+      "from": "C0",
+      "to": "C1",
+      "length": 229.2,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "C0bottom2": {
+      "from": "C0",
+      "to": "bottom2",
+      "length": 239.6,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": false
+    },
+    "C0right0": {
+      "from": "C0",
+      "to": "right0",
+      "length": 239.6,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": false
+    },
+    "C1B1": {
+      "from": "C1",
+      "to": "B1",
+      "length": 229.2,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "C1C0": {
+      "from": "C1",
+      "to": "C0",
+      "length": 229.2,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "C1C2": {
+      "from": "C1",
+      "to": "C2",
+      "length": 229.2,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "C1right1": {
+      "from": "C1",
+      "to": "right1",
+      "length": 239.6,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": false
+    },
+    "C2B2": {
+      "from": "C2",
+      "to": "B2",
+      "length": 229.2,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "C2C1": {
+      "from": "C2",
+      "to": "C1",
+      "length": 229.2,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "C2right2": {
+      "from": "C2",
+      "to": "right2",
+      "length": 239.6,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": false
+    },
+    "C2top2": {
+      "from": "C2",
+      "to": "top2",
+      "length": 239.6,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": false
+    },
+    "bottom0A0": {
+      "from": "bottom0",
+      "to": "A0",
+      "length": 239.6,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "bottom1B0": {
+      "from": "bottom1",
+      "to": "B0",
+      "length": 239.6,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "bottom2C0": {
+      "from": "bottom2",
+      "to": "C0",
+      "length": 239.6,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "left0A0": {
+      "from": "left0",
+      "to": "A0",
+      "length": 239.6,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "left1A1": {
+      "from": "left1",
+      "to": "A1",
+      "length": 239.6,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "left2A2": {
+      "from": "left2",
+      "to": "A2",
+      "length": 239.6,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "right0C0": {
+      "from": "right0",
+      "to": "C0",
+      "length": 239.6,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "right1C1": {
+      "from": "right1",
+      "to": "C1",
+      "length": 239.6,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "right2C2": {
+      "from": "right2",
+      "to": "C2",
+      "length": 239.6,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "top0A2": {
+      "from": "top0",
+      "to": "A2",
+      "length": 239.6,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "top1B2": {
+      "from": "top1",
+      "to": "B2",
+      "length": 239.6,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    },
+    "top2C2": {
+      "from": "top2",
+      "to": "C2",
+      "length": 239.6,
+      "lanes": 2,
+      "speed_limit": 13.89,
+      "approach": true
+    }
+  },
+  "tls": {
+    "A1": {
+      "incoming_edges": [
+        "A0A1",
+        "A2A1",
+        "B1A1",
+        "left1A1"
+      ],
+      "outgoing_edges": [
+        "A1A0",
+        "A1A2",
+        "A1B1",
+        "A1left1"
+      ],
+      "num_signal_links": 20
+    },
+    "B0": {
+      "incoming_edges": [
+        "A0B0",
+        "B1B0",
+        "C0B0",
+        "bottom1B0"
+      ],
+      "outgoing_edges": [
+        "B0A0",
+        "B0B1",
+        "B0C0",
+        "B0bottom1"
+      ],
+      "num_signal_links": 20
+    },
+    "A0": {
+      "incoming_edges": [
+        "A1A0",
+        "B0A0",
+        "bottom0A0",
+        "left0A0"
+      ],
+      "outgoing_edges": [
+        "A0A1",
+        "A0B0",
+        "A0bottom0",
+        "A0left0"
+      ],
+      "num_signal_links": 20
+    },
+    "A2": {
+      "incoming_edges": [
+        "A1A2",
+        "B2A2",
+        "left2A2",
+        "top0A2"
+      ],
+      "outgoing_edges": [
+        "A2A1",
+        "A2B2",
+        "A2left2",
+        "A2top0"
+      ],
+      "num_signal_links": 20
+    },
+    "B1": {
+      "incoming_edges": [
+        "A1B1",
+        "B0B1",
+        "B2B1",
+        "C1B1"
+      ],
+      "outgoing_edges": [
+        "B1A1",
+        "B1B0",
+        "B1B2",
+        "B1C1"
+      ],
+      "num_signal_links": 20
+    },
+    "B2": {
+      "incoming_edges": [
+        "A2B2",
+        "B1B2",
+        "C2B2",
+        "top1B2"
+      ],
+      "outgoing_edges": [
+        "B2A2",
+        "B2B1",
+        "B2C2",
+        "B2top1"
+      ],
+      "num_signal_links": 20
+    },
+    "C0": {
+      "incoming_edges": [
+        "B0C0",
+        "C1C0",
+        "bottom2C0",
+        "right0C0"
+      ],
+      "outgoing_edges": [
+        "C0B0",
+        "C0C1",
+        "C0bottom2",
+        "C0right0"
+      ],
+      "num_signal_links": 20
+    },
+    "C1": {
+      "incoming_edges": [
+        "B1C1",
+        "C0C1",
+        "C2C1",
+        "right1C1"
+      ],
+      "outgoing_edges": [
+        "C1B1",
+        "C1C0",
+        "C1C2",
+        "C1right1"
+      ],
+      "num_signal_links": 20
+    },
+    "C2": {
+      "incoming_edges": [
+        "B2C2",
+        "C1C2",
+        "right2C2",
+        "top2C2"
+      ],
+      "outgoing_edges": [
+        "C2B2",
+        "C2C1",
+        "C2right2",
+        "C2top2"
+      ],
+      "num_signal_links": 20
+    }
+  },
+  "entry_edges": [
+    "bottom0A0",
+    "bottom1B0",
+    "bottom2C0",
+    "left0A0",
+    "left1A1",
+    "left2A2",
+    "right0C0",
+    "right1C1",
+    "right2C2",
+    "top0A2",
+    "top1B2",
+    "top2C2"
+  ],
+  "exit_edges": [
+    "A0bottom0",
+    "A0left0",
+    "A1left1",
+    "A2left2",
+    "A2top0",
+    "B0bottom1",
+    "B2top1",
+    "C0bottom2",
+    "C0right0",
+    "C1right1",
+    "C2right2",
+    "C2top2"
+  ]
+}
